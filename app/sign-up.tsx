@@ -40,7 +40,11 @@ export default function SignUpScreen() {
     height?: string;
   }>({});
   
+<<<<<<< HEAD
   const { signUp } = useUser();
+=======
+  const { signIn } = useUser();
+>>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -85,7 +89,11 @@ export default function SignUpScreen() {
     }
   };
 
+<<<<<<< HEAD
   const handleComplete = async () => {
+=======
+  const handleComplete = () => {
+>>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
     const newErrors: typeof errors = {};
 
     if (!age.trim()) {
@@ -107,6 +115,7 @@ export default function SignUpScreen() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
+<<<<<<< HEAD
       try {
         const userData = {
           name,
@@ -128,14 +137,35 @@ export default function SignUpScreen() {
         setErrors(newErrors);
         setStep(1);
       }
+=======
+      const user = {
+        id: Date.now().toString(),
+        name,
+        email,
+        age: parseInt(age),
+        weight: parseFloat(weight),
+        height: parseFloat(height),
+        goal,
+        activityLevel,
+      };
+
+      signIn(user);
+>>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
     }
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     if (name || email || password || confirmPassword || age || weight || height) {
       setErrors({});
     }
   }, [name, email, password, confirmPassword, age, weight, height]);
+=======
+    if (name || email || password || confirmPassword) {
+      setErrors({});
+    }
+  }, [name, email, password, confirmPassword]);
+>>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
 
   return (
     <KeyboardAvoidingView
