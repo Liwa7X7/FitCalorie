@@ -46,8 +46,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: "Profile", // This title is for the tab bar, not the header.
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          headerShown: false, // Ensure no default header is shown by the tab navigator for this screen
         }}
       />
     </Tabs>

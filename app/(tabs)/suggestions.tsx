@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { generateText } from '@rork/toolkit-sdk';
 import Colors from '@/constants/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 interface MealSuggestion {
   name: string;
@@ -22,6 +23,7 @@ export default function SuggestionsScreen() {
   const { user, calculateBMR } = useUser();
   const { getTodayCalories, getTodayMacros } = useFood();
   const insets = useSafeAreaInsets();
+  const { t, i18n } = useTranslation();
   const [suggestions, setSuggestions] = useState<MealSuggestion[]>([]);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
@@ -73,6 +75,8 @@ For each meal, provide:
 4. Carbs (g)
 5. Fat (g)
 6. Brief description
+
+The meal name and description should be in ${i18n.language}.
 
 Format: NAME | CALORIES | PROTEIN | CARBS | FAT | DESCRIPTION
 (One meal per line)`;
@@ -141,7 +145,7 @@ Format: NAME | CALORIES | PROTEIN | CARBS | FAT | DESCRIPTION
       >
         <View style={styles.headerTop}>
           <Sparkles size={32} color={Colors.light.primary} />
-          <Text style={styles.headerTitle}>Meal Suggestions</Text>
+          <Text style={styles.headerTitle}>{t('suggestions.title')}</Text>
         </View>
         <Text style={styles.headerSubtitle}>
           AI-powered recommendations based on your goals
@@ -199,10 +203,10 @@ Format: NAME | CALORIES | PROTEIN | CARBS | FAT | DESCRIPTION
           <Text style={styles.sectionTitle}>Get Suggestions For</Text>
           <View style={styles.mealTypeGrid}>
             {[
-              { type: 'breakfast', label: 'Breakfast', icon: Coffee },
-              { type: 'lunch', label: 'Lunch', icon: Salad },
-              { type: 'dinner', label: 'Dinner', icon: ChefHat },
-              { type: 'snack', label: 'Snack', icon: Cookie },
+              { type: 'breakfast', label: t('suggestions.breakfast'), icon: Coffee },
+              { type: 'lunch', label: t('suggestions.lunch'), icon: Salad },
+              { type: 'dinner', label: t('suggestions.dinner'), icon: ChefHat },
+              { type: 'snack', label: t('suggestions.snack'), icon: Cookie },
             ].map((meal) => {
               const Icon = meal.icon;
               return (

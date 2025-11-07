@@ -14,12 +14,14 @@ import { User as UserIcon, Mail, Weight, Ruler, Target, Activity, Edit2, LogOut,
 import { useUser } from '@/contexts/UserContext';
 import { useFood } from '@/contexts/FoodContext';
 import Colors from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const { user, updateProfile, signOut, calculateBMR } = useUser();
   const { getTodayCalories, foods } = useFood();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editField, setEditField] = useState('');
   const [editValue, setEditValue] = useState('');
@@ -96,12 +98,12 @@ export default function ProfileScreen() {
 
   const handleSignOut = () => {
     Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
+      t('profile.signOutTitle'),
+      t('profile.signOutMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('profile.cancel'), style: 'cancel' },
         {
-          text: 'Sign Out',
+          text: t('profile.signOutButton'),
           style: 'destructive',
           onPress: () => {
             signOut();
@@ -129,7 +131,7 @@ export default function ProfileScreen() {
           },
         ]}
       >
-        <Text style={styles.headerTitle}>Profile</Text>
+        <Text style={styles.headerTitle}>{t('profile.title')}</Text>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
           <LogOut size={20} color={Colors.light.error} />
         </TouchableOpacity>
@@ -155,8 +157,8 @@ export default function ProfileScreen() {
           <View style={styles.avatarContainer}>
             <UserIcon size={48} color={Colors.light.primary} />
           </View>
-          <Text style={styles.userName}>{user?.name || 'User'}</Text>
-          <Text style={styles.userEmail}>{user?.email || 'user@example.com'}</Text>
+          <Text style={styles.userName}>{user?.name || t('profile.notSet')}</Text>
+          <Text style={styles.userEmail}>{user?.email || t('profile.notSet')}</Text>
         </Animated.View>
 
         <Animated.View
@@ -180,7 +182,7 @@ export default function ProfileScreen() {
               <Trophy size={24} color={Colors.light.primary} />
             </View>
             <Text style={styles.statValue}>{totalMealsLogged}</Text>
-            <Text style={styles.statLabel}>Meals Logged</Text>
+            <Text style={styles.statLabel}>{t('profile.mealsLogged')}</Text>
           </View>
 
           <View style={styles.statCard}>
@@ -188,27 +190,34 @@ export default function ProfileScreen() {
               <Target size={24} color={Colors.light.secondary} />
             </View>
             <Text style={styles.statValue}>{Math.round(caloriesProgress)}%</Text>
-            <Text style={styles.statLabel}>Daily Goal</Text>
+            <Text style={styles.statLabel}>{t('profile.dailyGoal')}</Text>
           </View>
         </Animated.View>
 
         <View style={styles.calorieGoalCard}>
-          <Text style={styles.sectionTitle}>Daily Calorie Goal</Text>
+          <Text style={styles.sectionTitle}>{t('profile.dailyCalorieGoal')}</Text>
           <View style={styles.calorieGoalContent}>
             <View style={styles.calorieGoalLeft}>
               <Text style={styles.calorieGoalValue}>{targetCalories}</Text>
-              <Text style={styles.calorieGoalLabel}>kcal/day</Text>
+              <Text style={styles.calorieGoalLabel}>{t('profile.kcalPerDay')}</Text>
             </View>
             <View style={styles.calorieGoalRight}>
               <Text style={styles.calorieGoalDescription}>
-                Based on your profile, this is your recommended daily calorie intake to {user?.goal === 'lose' ? 'lose weight' : user?.goal === 'gain' ? 'gain weight' : 'maintain weight'}.
+                {t('profile.calorieGoalDescription', {
+                  goalText:
+                    user?.goal === 'lose'
+                      ? t('profile.loseWeightText')
+                      : user?.goal === 'gain'
+                      ? t('profile.gainWeightText')
+                      : t('profile.maintainWeightText'),
+                })}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <Text style={styles.sectionTitle}>{t('profile.personalInformation')}</Text>
 
           <TouchableOpacity
             style={styles.infoCard}
@@ -219,8 +228,8 @@ export default function ProfileScreen() {
                 <UserIcon size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Name</Text>
-                <Text style={styles.infoValue}>{user?.name || 'Not set'}</Text>
+                <Text style={styles.infoLabel}>{t('profile.name')}</Text>
+                <Text style={styles.infoValue}>{user?.name || t('profile.notSet')}</Text>
               </View>
             </View>
             <Edit2 size={20} color={Colors.light.textSecondary} />
@@ -235,8 +244,8 @@ export default function ProfileScreen() {
                 <Mail size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Email</Text>
-                <Text style={styles.infoValue}>{user?.email || 'Not set'}</Text>
+                <Text style={styles.infoLabel}>{t('profile.email')}</Text>
+                <Text style={styles.infoValue}>{user?.email || t('profile.notSet')}</Text>
               </View>
             </View>
             <Edit2 size={20} color={Colors.light.textSecondary} />
@@ -251,8 +260,8 @@ export default function ProfileScreen() {
                 <UserIcon size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Age</Text>
-                <Text style={styles.infoValue}>{user?.age ? `${user.age} years` : 'Not set'}</Text>
+                <Text style={styles.infoLabel}>{t('profile.age')}</Text>
+                <Text style={styles.infoValue}>{user?.age ? `${user.age} ${t('profile.years')}` : t('profile.notSet')}</Text>
               </View>
             </View>
             <Edit2 size={20} color={Colors.light.textSecondary} />
@@ -267,8 +276,8 @@ export default function ProfileScreen() {
                 <Weight size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Weight</Text>
-                <Text style={styles.infoValue}>{user?.weight ? `${user.weight} kg` : 'Not set'}</Text>
+                <Text style={styles.infoLabel}>{t('profile.weight')}</Text>
+                <Text style={styles.infoValue}>{user?.weight ? `${user.weight} ${t('profile.kg')}` : t('profile.notSet')}</Text>
               </View>
             </View>
             <Edit2 size={20} color={Colors.light.textSecondary} />
@@ -283,8 +292,8 @@ export default function ProfileScreen() {
                 <Ruler size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Height</Text>
-                <Text style={styles.infoValue}>{user?.height ? `${user.height} cm` : 'Not set'}</Text>
+                <Text style={styles.infoLabel}>{t('profile.height')}</Text>
+                <Text style={styles.infoValue}>{user?.height ? `${user.height} ${t('profile.cm')}` : t('profile.notSet')}</Text>
               </View>
             </View>
             <Edit2 size={20} color={Colors.light.textSecondary} />
@@ -292,7 +301,7 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Fitness Goals</Text>
+          <Text style={styles.sectionTitle}>{t('profile.fitnessGoals')}</Text>
 
           <View style={styles.infoCard}>
             <View style={styles.infoLeft}>
@@ -300,9 +309,9 @@ export default function ProfileScreen() {
                 <Target size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Goal</Text>
+                <Text style={styles.infoLabel}>{t('profile.goal')}</Text>
                 <Text style={styles.infoValue}>
-                  {user?.goal === 'lose' ? 'Lose Weight' : user?.goal === 'gain' ? 'Gain Weight' : 'Maintain Weight'}
+                  {user?.goal === 'lose' ? t('profile.loseWeightText') : user?.goal === 'gain' ? t('profile.gainWeightText') : t('profile.maintainWeightText')}
                 </Text>
               </View>
             </View>
@@ -314,9 +323,9 @@ export default function ProfileScreen() {
                 <Activity size={20} color={Colors.light.primary} />
               </View>
               <View>
-                <Text style={styles.infoLabel}>Activity Level</Text>
+                <Text style={styles.infoLabel}>{t('profile.activityLevel')}</Text>
                 <Text style={styles.infoValue}>
-                  {user?.activityLevel ? user.activityLevel.charAt(0).toUpperCase() + user.activityLevel.slice(1) : 'Not set'}
+                  {user?.activityLevel ? t(`profile.${user.activityLevel}`) : t('profile.notSet')}
                 </Text>
               </View>
             </View>
@@ -356,13 +365,13 @@ export default function ProfileScreen() {
             ]}
           >
             <Text style={styles.modalTitle}>
-              Edit {editField.charAt(0).toUpperCase() + editField.slice(1)}
+              {t('profile.edit')} {t(`profile.${editField}`)}
             </Text>
             <TextInput
               style={styles.modalInput}
               value={editValue}
               onChangeText={setEditValue}
-              placeholder={`Enter ${editField}`}
+              placeholder={`${t('profile.enter')} ${t(`profile.${editField}`)}`}
               placeholderTextColor={Colors.light.textSecondary}
               keyboardType={['age', 'weight', 'height'].includes(editField) ? 'numeric' : 'default'}
               autoFocus
@@ -372,13 +381,13 @@ export default function ProfileScreen() {
                 style={[styles.modalButton, styles.modalButtonCancel]}
                 onPress={() => setEditModalVisible(false)}
               >
-                <Text style={styles.modalButtonTextCancel}>Cancel</Text>
+                <Text style={styles.modalButtonTextCancel}>{t('profile.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalButtonSave]}
                 onPress={handleSave}
               >
-                <Text style={styles.modalButtonTextSave}>Save</Text>
+                <Text style={styles.modalButtonTextSave}>{t('profile.save')}</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>

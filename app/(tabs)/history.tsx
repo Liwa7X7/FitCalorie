@@ -4,10 +4,13 @@ import { useFood } from '@/contexts/FoodContext';
 import Colors from '@/constants/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { generateText } from '@rork/toolkit-sdk';
 
 export default function HistoryScreen() {
   const { foods, removeFood, getTodayCalories, getTodayMacros } = useFood();
   const insets = useSafeAreaInsets();
+  const { t, i18n } = useTranslation();
   const todayCalories = getTodayCalories();
   const macros = getTodayMacros();
 
@@ -37,10 +40,10 @@ export default function HistoryScreen() {
     today.setHours(0, 0, 0, 0);
     
     if (date >= today) {
-      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      return date.toLocaleTimeString(i18n.language, { hour: 'numeric', minute: '2-digit' });
     }
     
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' });
   };
 
   const groupedFoods = foods.reduce((acc, food) => {
@@ -77,7 +80,7 @@ export default function HistoryScreen() {
           },
         ]}
       >
-        <Text style={styles.headerTitle}>Nutrition Log</Text>
+        <Text style={styles.headerTitle}>{t('history.title')}</Text>
       </Animated.View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -99,35 +102,35 @@ export default function HistoryScreen() {
         >
           <View style={styles.summaryHeader}>
             <TrendingUp size={24} color={Colors.light.primary} />
-            <Text style={styles.summaryTitle}>Today&apos;s Summary</Text>
+            <Text style={styles.summaryTitle}>{t('history.summaryTitle')}</Text>
           </View>
           
           <View style={styles.caloriesDisplay}>
             <Text style={styles.caloriesValue}>{todayCalories}</Text>
-            <Text style={styles.caloriesLabel}>calories</Text>
+            <Text style={styles.caloriesLabel}>{t('home.calories')}</Text>
           </View>
 
           <View style={styles.macrosContainer}>
             <View style={styles.macroItem}>
               <Text style={styles.macroValue}>{Math.round(macros.protein)}g</Text>
-              <Text style={styles.macroLabel}>Protein</Text>
+              <Text style={styles.macroLabel}>{t('home.protein')}</Text>
             </View>
             <View style={styles.macroDivider} />
             <View style={styles.macroItem}>
               <Text style={styles.macroValue}>{Math.round(macros.carbs)}g</Text>
-              <Text style={styles.macroLabel}>Carbs</Text>
+              <Text style={styles.macroLabel}>{t('home.carbs')}</Text>
             </View>
             <View style={styles.macroDivider} />
             <View style={styles.macroItem}>
               <Text style={styles.macroValue}>{Math.round(macros.fat)}g</Text>
-              <Text style={styles.macroLabel}>Fat</Text>
+              <Text style={styles.macroLabel}>{t('home.fat')}</Text>
             </View>
           </View>
         </Animated.View>
 
         {sortedDateKeys.length === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyStateTitle}>No meals logged yet</Text>
+            <Text style={styles.emptyStateTitle}>{t('history.noFood')}</Text>
             <Text style={styles.emptyStateText}>
               Start scanning your meals to track your nutrition
             </Text>
@@ -137,7 +140,7 @@ export default function HistoryScreen() {
             {sortedDateKeys.map((dateKey) => {
               const date = new Date(dateKey);
               const isToday = date.toDateString() === new Date().toDateString();
-              const dateLabel = isToday ? 'Today' : date.toLocaleDateString('en-US', { 
+              const dateLabel = isToday ? t('history.today') : date.toLocaleDateString(i18n.language, { 
                 weekday: 'long', 
                 month: 'short', 
                 day: 'numeric' 
@@ -154,6 +157,7 @@ export default function HistoryScreen() {
                       <View style={styles.foodInfo}>
                         <Text style={styles.foodName}>{food.name}</Text>
                         <Text style={styles.foodServing}>{food.servingSize}</Text>
+                        <Text style={styles.foodDescription}>{food.description}</Text>
                         <Text style={styles.foodTime}>{formatDate(food.timestamp)}</Text>
                       </View>
 
@@ -323,6 +327,11 @@ const styles = StyleSheet.create({
   },
   foodServing: {
     fontSize: 14,
+    color: Colors.light.textSecondary,
+    marginBottom: 4,
+  },
+  foodDescription: {
+    fontSize: 12,
     color: Colors.light.textSecondary,
     marginBottom: 4,
   },

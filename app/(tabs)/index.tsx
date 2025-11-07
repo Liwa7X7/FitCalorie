@@ -8,6 +8,8 @@ import { generateObject } from '@rork/toolkit-sdk';
 import { z } from 'zod';
 import { FoodItem } from '@/types/food';
 import Colors from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
+import FoodAnalysisPopup from '@/components/FoodAnalysisPopup';
 
 const nutritionSchema = z.object({
   foodName: z.string().describe('Name of the food item'),
@@ -17,6 +19,7 @@ const nutritionSchema = z.object({
   fat: z.number().describe('Fat in grams'),
   fiber: z.number().optional().describe('Fiber in grams'),
   servingSize: z.string().describe('Serving size description'),
+  description: z.string().describe('Brief description of the food item'),
 });
 
 export default function ScanScreen() {
@@ -24,8 +27,11 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [analyzing, setAnalyzing] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [showAnalysisPopup, setShowAnalysisPopup] = useState(false);
+  const [analyzedFoodItem, setAnalyzedFoodItem] = useState<FoodItem | null>(null);
   const cameraRef = useRef<CameraView>(null);
   const { addFood, getTodayCalories } = useFood();
+  const { t, i18n } = useTranslation();
 
   const scanFrameAnim = useRef(new Animated.Value(0)).current;
   const statsAnim = useRef(new Animated.Value(0)).current;
@@ -109,7 +115,7 @@ export default function ScanScreen() {
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Analyze this food image and provide nutritional information. Be as accurate as possible based on what you see. If multiple items, provide combined totals.' },
+              { type: 'text', text: `Analyze this food image and provide nutritional information. Be as accurate as possible based on what you see. If multiple items, provide combined totals. Also, provide a brief description of the food. The food name and description should be in ${i18n.language}.` },
               { type: 'image', image: base64Image },
             ],
           },
@@ -130,17 +136,28 @@ export default function ScanScreen() {
         servingSize: result.servingSize,
         imageUri,
         timestamp: Date.now(),
+        description: result.description,
       };
 
-      addFood(foodItem);
+      setAnalyzedFoodItem(foodItem);
+      setShowAnalysisPopup(true);
       setCapturedImage(null);
-      console.log('Food item added to history');
+      console.log('Food analysis complete, showing popup');
     } catch (error) {
       console.error('Error analyzing food:', error);
-      alert('Failed to analyze food. Please try again.');
+      alert(t('alerts.foodAnalysisFailed'));
     } finally {
       setAnalyzing(false);
     }
+  };
+
+  const handleSkipAnalysis = () => {
+    if (analyzedFoodItem) {
+      addFood(analyzedFoodItem);
+      console.log('Food item added to history (skipped analysis)');
+    }
+    setShowAnalysisPopup(false);
+    setAnalyzedFoodItem(null);
   };
 
   const takePicture = async () => {
@@ -174,7 +191,7 @@ export default function ScanScreen() {
       }
     } catch (error) {
       console.error('Error taking picture:', error);
-      alert('Failed to take picture. Please try again.');
+      alert(t('alerts.takePictureFailed'));
     }
   };
 
@@ -232,7 +249,7 @@ export default function ScanScreen() {
             ]}
           >
             <View style={styles.statsCard}>
-              <Text style={styles.statsLabel}>Today&apos;s Calories</Text>
+              <Text style={styles.statsLabel}>{t('home.calories')}</Text>
               <Text style={styles.statsValue}>{todayCalories}</Text>
               <Text style={styles.statsUnit}>kcal</Text>
             </View>
@@ -258,9 +275,9 @@ export default function ScanScreen() {
           </View>
 
           <View style={styles.instructions}>
-            <Text style={styles.instructionsTitle}>Scan Your Food</Text>
+            <Text style={styles.instructionsTitle}>{t('home.addFood')}</Text>
             <Text style={styles.instructionsText}>
-              Point your camera at your meal or upload a photo from your gallery
+              {t('home.instructionsText')}
             </Text>
           </View>
 
@@ -286,6 +303,13 @@ export default function ScanScreen() {
             <View style={styles.galleryButton} />
           </View>
         </>
+      )}
+      {analyzedFoodItem && (
+        <FoodAnalysisPopup
+          foodItem={analyzedFoodItem}
+          onSkip={handleSkipAnalysis}
+          isVisible={showAnalysisPopup}
+        />
       )}
     </View>
   );

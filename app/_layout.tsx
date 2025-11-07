@@ -10,6 +10,8 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { FoodProvider } from "@/contexts/FoodContext";
 import { UserProvider, useUser } from "@/contexts/UserContext";
+import { I18nextProvider } from "react-i18next";
+import i18n from "../i18n";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -60,14 +62,16 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <UserProvider>
-        <FoodProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <BundleInspector><RorkSafeInsets><RorkErrorBoundary><RootLayoutNav /></RorkErrorBoundary></RorkSafeInsets></BundleInspector>
-          </GestureHandlerRootView>
-        </FoodProvider>
-      </UserProvider>
-    </QueryClientProvider>
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <FoodProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BundleInspector><RorkSafeInsets><RorkErrorBoundary><RootLayoutNav /></RorkErrorBoundary></RorkSafeInsets></BundleInspector>
+            </GestureHandlerRootView>
+          </FoodProvider>
+        </UserProvider>
+      </QueryClientProvider>
+    </I18nextProvider>
   );
 }

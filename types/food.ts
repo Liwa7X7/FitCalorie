@@ -9,6 +9,7 @@ export interface FoodItem {
   servingSize: string;
   imageUri: string;
   timestamp: number;
+  description: string; // Added for AI-generated food description
 }
 
 export interface NutritionAnalysis {

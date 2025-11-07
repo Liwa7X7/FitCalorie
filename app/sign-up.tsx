@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'expo-router';
 import { User as UserIcon, Mail, Lock, Activity, Target, Ruler, Weight } from 'lucide-react-native';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 import Colors from '@/constants/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -40,13 +41,10 @@ export default function SignUpScreen() {
     height?: string;
   }>({});
   
-<<<<<<< HEAD
   const { signUp } = useUser();
-=======
-  const { signIn } = useUser();
->>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const formAnim = useRef(new Animated.Value(1)).current;
 
@@ -64,22 +62,22 @@ export default function SignUpScreen() {
     const newErrors: typeof errors = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('alerts.nameRequired');
     }
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('alerts.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = t('alerts.emailInvalid');
     }
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('alerts.passwordRequired');
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = t('alerts.passwordLength');
     }
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = t('alerts.confirmPasswordRequired');
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('alerts.passwordsMismatch');
     }
 
     setErrors(newErrors);
@@ -89,33 +87,37 @@ export default function SignUpScreen() {
     }
   };
 
-<<<<<<< HEAD
   const handleComplete = async () => {
-=======
-  const handleComplete = () => {
->>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
     const newErrors: typeof errors = {};
 
     if (!age.trim()) {
-      newErrors.age = 'Age is required';
-    } else if (parseInt(age) < 13 || parseInt(age) > 120) {
-      newErrors.age = 'Please enter a valid age';
+      newErrors.age = t('alerts.ageRequired');
+    } else {
+      const ageNum = parseInt(age);
+      if (isNaN(ageNum) || ageNum < 13 || ageNum > 100) {
+        newErrors.age = t('alerts.ageRange');
+      }
     }
     if (!weight.trim()) {
-      newErrors.weight = 'Weight is required';
-    } else if (parseFloat(weight) <= 0) {
-      newErrors.weight = 'Please enter a valid weight';
+      newErrors.weight = t('alerts.weightRequired');
+    } else {
+      const weightNum = parseFloat(weight);
+      if (isNaN(weightNum) || weightNum < 20 || weightNum > 300) {
+        newErrors.weight = t('alerts.weightRange');
+      }
     }
     if (!height.trim()) {
-      newErrors.height = 'Height is required';
-    } else if (parseFloat(height) <= 0) {
-      newErrors.height = 'Please enter a valid height';
+      newErrors.height = t('alerts.heightRequired');
+    } else {
+      const heightNum = parseFloat(height);
+      if (isNaN(heightNum) || heightNum < 50 || heightNum > 250) {
+        newErrors.height = t('alerts.heightRange');
+      }
     }
 
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-<<<<<<< HEAD
       try {
         const userData = {
           name,
@@ -130,42 +132,21 @@ export default function SignUpScreen() {
       } catch (error: any) {
         const newErrors: typeof errors = {};
         if (error.code === 'auth/email-already-in-use') {
-          newErrors.email = 'This email is already in use.';
+          newErrors.email = t('alerts.emailInUse');
         } else {
-          newErrors.email = 'An unexpected error occurred.';
+          newErrors.email = t('alerts.unexpectedError');
         }
         setErrors(newErrors);
         setStep(1);
       }
-=======
-      const user = {
-        id: Date.now().toString(),
-        name,
-        email,
-        age: parseInt(age),
-        weight: parseFloat(weight),
-        height: parseFloat(height),
-        goal,
-        activityLevel,
-      };
-
-      signIn(user);
->>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
     }
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     if (name || email || password || confirmPassword || age || weight || height) {
       setErrors({});
     }
   }, [name, email, password, confirmPassword, age, weight, height]);
-=======
-    if (name || email || password || confirmPassword) {
-      setErrors({});
-    }
-  }, [name, email, password, confirmPassword]);
->>>>>>> 15d3caca0e378ce8836dbb60505593dbd6893a78
 
   return (
     <KeyboardAvoidingView
@@ -181,9 +162,9 @@ export default function SignUpScreen() {
           <View style={styles.logoContainer}>
             <Activity size={48} color={Colors.light.primary} />
           </View>
-          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.title}>{t('signup.title')}</Text>
           <Text style={styles.subtitle}>
-            {step === 1 ? 'Enter your details to get started' : 'Tell us about your fitness goals'}
+            {step === 1 ? t('signup.subtitle') : 'Tell us about your fitness goals'}
           </Text>
           <View style={styles.progressContainer}>
             <View style={[styles.progressDot, step >= 1 && styles.progressDotActive]} />
@@ -211,7 +192,7 @@ export default function SignUpScreen() {
             <View style={styles.inputGroup}>
               <View style={styles.inputLabel}>
                 <UserIcon size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Name *</Text>
+                <Text style={styles.labelText}>{t('signup.username')} *</Text>
               </View>
               <TextInput
                 style={[styles.input, errors.name && styles.inputError]}
@@ -229,7 +210,7 @@ export default function SignUpScreen() {
             <View style={styles.inputGroup}>
               <View style={styles.inputLabel}>
                 <Mail size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Email *</Text>
+                <Text style={styles.labelText}>{t('signup.email')} *</Text>
               </View>
               <TextInput
                 style={[styles.input, errors.email && styles.inputError]}
@@ -249,7 +230,7 @@ export default function SignUpScreen() {
             <View style={styles.inputGroup}>
               <View style={styles.inputLabel}>
                 <Lock size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Password *</Text>
+                <Text style={styles.labelText}>{t('signup.password')} *</Text>
               </View>
               <TextInput
                 style={[styles.input, errors.password && styles.inputError]}
@@ -294,11 +275,11 @@ export default function SignUpScreen() {
               onPress={handleContinue}
               activeOpacity={0.8}
             >
-              <Text style={styles.buttonText}>Continue</Text>
+              <Text style={styles.buttonText}>{t('signup.button')}</Text>
             </TouchableOpacity>
 
             <View style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>Already have an account? </Text>
+              <Text style={styles.signUpText}>{t('signup.hasAccount')}</Text>
               <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
                 <Text style={styles.signUpLink}>Sign In</Text>
               </TouchableOpacity>
@@ -325,7 +306,7 @@ export default function SignUpScreen() {
               <View style={[styles.inputGroup, styles.halfWidth]}>
                 <View style={styles.inputLabel}>
                   <UserIcon size={20} color={Colors.light.text} />
-                  <Text style={styles.labelText}>Age *</Text>
+                  <Text style={styles.labelText}>{t('signup.age')} *</Text>
                 </View>
                 <TextInput
                   style={[styles.input, errors.age && styles.inputError]}
@@ -343,7 +324,7 @@ export default function SignUpScreen() {
               <View style={[styles.inputGroup, styles.halfWidth]}>
                 <View style={styles.inputLabel}>
                   <Weight size={20} color={Colors.light.text} />
-                  <Text style={styles.labelText}>Weight (kg) *</Text>
+                  <Text style={styles.labelText}>{t('signup.weight')} (kg) *</Text>
                 </View>
                 <TextInput
                   style={[styles.input, errors.weight && styles.inputError]}
@@ -362,7 +343,7 @@ export default function SignUpScreen() {
             <View style={styles.inputGroup}>
               <View style={styles.inputLabel}>
                 <Ruler size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Height (cm) *</Text>
+                <Text style={styles.labelText}>{t('signup.height')} (cm) *</Text>
               </View>
               <TextInput
                 style={[styles.input, errors.height && styles.inputError]}
@@ -374,13 +355,13 @@ export default function SignUpScreen() {
               />
               {errors.height && (
                 <Text style={styles.errorText}>{errors.height}</Text>
-              )}
+                )}
             </View>
 
             <View style={styles.optionGroup}>
               <View style={styles.inputLabel}>
                 <Target size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Your Goal *</Text>
+                <Text style={styles.labelText}>{t('signup.yourGoal')} *</Text>
               </View>
               <View style={styles.options}>
                 <TouchableOpacity
@@ -389,7 +370,7 @@ export default function SignUpScreen() {
                   activeOpacity={0.8}
                 >
                   <Text style={[styles.optionText, goal === 'lose' && styles.optionTextActive]}>
-                    Lose Weight
+                    {t('signup.loseWeight')}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -398,7 +379,7 @@ export default function SignUpScreen() {
                   activeOpacity={0.8}
                 >
                   <Text style={[styles.optionText, goal === 'maintain' && styles.optionTextActive]}>
-                    Maintain
+                    {t('signup.maintain')}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -407,7 +388,7 @@ export default function SignUpScreen() {
                   activeOpacity={0.8}
                 >
                   <Text style={[styles.optionText, goal === 'gain' && styles.optionTextActive]}>
-                    Gain Weight
+                    {t('signup.gainWeight')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -416,15 +397,15 @@ export default function SignUpScreen() {
             <View style={styles.optionGroup}>
               <View style={styles.inputLabel}>
                 <Activity size={20} color={Colors.light.text} />
-                <Text style={styles.labelText}>Activity Level *</Text>
+                <Text style={styles.labelText}>{t('signup.activityLevel')} *</Text>
               </View>
               <View style={styles.options}>
                 {[
-                  { value: 'sedentary' as const, label: 'Sedentary' },
-                  { value: 'light' as const, label: 'Light' },
-                  { value: 'moderate' as const, label: 'Moderate' },
-                  { value: 'active' as const, label: 'Active' },
-                  { value: 'very-active' as const, label: 'Very Active' },
+                  { value: 'sedentary' as const, label: t('signup.sedentary') },
+                  { value: 'light' as const, label: t('signup.light') },
+                  { value: 'moderate' as const, label: t('signup.moderate') },
+                  { value: 'active' as const, label: t('signup.active') },
+                  { value: 'very-active' as const, label: t('signup.veryActive') },
                 ].map((option) => (
                   <TouchableOpacity
                     key={option.value}
@@ -454,14 +435,14 @@ export default function SignUpScreen() {
                 onPress={() => setStep(1)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.buttonSecondaryText}>Back</Text>
+                <Text style={styles.buttonSecondaryText}>{t('signup.back')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.buttonPrimary]}
                 onPress={handleComplete}
                 activeOpacity={0.8}
               >
-                <Text style={styles.buttonText}>Complete</Text>
+                <Text style={styles.buttonText}>{t('signup.complete')}</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>
