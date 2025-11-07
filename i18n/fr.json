@@ -12,13 +12,16 @@
     "signUpLink": "S'inscrire"
   },
   "signup": {
+    "iAgreeTo": "J'accepte les",
+    "terms": "Conditions Générales",
+    "privacyPolicy": "Politique de Confidentialité",
     "title": "Créer un compte",
-    "subtitle": "Commencez votre parcours de remise en forme avec nous aujourd'hui",
+    "subtitle": "Commencez votre parcours de remise en forme avec nous aujourd's",
     "username": "Nom d'utilisateur",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Mot de passe",
     "button": "S'inscrire",
-    "hasAccount": "Vous avez déjà un compte ? Se connecter",
+    "hasAccount": "Vous avez déjà un compte ? Connectez-vous",
     "age": "Âge",
     "weight": "Poids",
     "height": "Taille",
@@ -124,6 +127,7 @@
     "loginFailedTitle": "Échec de la connexion",
     "invalidEmail": "Adresse email invalide.",
     "userNotFound": "Aucun compte trouvé pour cet email.",
-    "incorrectPassword": "Mot de passe incorrect."
+    "incorrectPassword": "Mot de passe incorrect.",
+    "legalRequired": "Vous devez accepter les conditions générales et la politique de confidentialité pour continuer."
   }
 }

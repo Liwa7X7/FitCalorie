@@ -10,9 +10,10 @@ import {
   ScrollView,
   Animated,
   Dimensions,
+  I18nManager,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { User as UserIcon, Mail, Lock, Activity, Target, Ruler, Weight } from 'lucide-react-native';
+import { User as UserIcon, Mail, Lock, Activity, Target, Ruler, Weight, CheckSquare, Square } from 'lucide-react-native';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 import Colors from '@/constants/colors';
@@ -31,6 +32,7 @@ export default function SignUpScreen() {
   const [height, setHeight] = useState('');
   const [goal, setGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
   const [activityLevel, setActivityLevel] = useState<'sedentary' | 'light' | 'moderate' | 'active' | 'very-active'>('moderate');
+  const [acceptedLegal, setAcceptedLegal] = useState(false); // New state for legal acceptance
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -39,6 +41,7 @@ export default function SignUpScreen() {
     age?: string;
     weight?: string;
     height?: string;
+    acceptedLegal?: string; // New error field
   }>({});
   
   const { signUp } = useUser();
@@ -78,6 +81,9 @@ export default function SignUpScreen() {
       newErrors.confirmPassword = t('alerts.confirmPasswordRequired');
     } else if (password !== confirmPassword) {
       newErrors.confirmPassword = t('alerts.passwordsMismatch');
+    }
+    if (!acceptedLegal) { // Validate legal acceptance
+      newErrors.acceptedLegal = t('alerts.legalRequired');
     }
 
     setErrors(newErrors);
@@ -143,10 +149,10 @@ export default function SignUpScreen() {
   };
 
   useEffect(() => {
-    if (name || email || password || confirmPassword || age || weight || height) {
+    if (name || email || password || confirmPassword || age || weight || height || acceptedLegal) {
       setErrors({});
     }
-  }, [name, email, password, confirmPassword, age, weight, height]);
+  }, [name, email, password, confirmPassword, age, weight, height, acceptedLegal]);
 
   return (
     <KeyboardAvoidingView
@@ -269,6 +275,37 @@ export default function SignUpScreen() {
                 <Text style={styles.errorText}>{errors.confirmPassword}</Text>
               )}
             </View>
+
+            {/* Legal Acceptance Checkbox and Links */}
+            <View style={styles.legalContainer}>
+              <TouchableOpacity
+                style={styles.checkbox}
+                onPress={() => setAcceptedLegal(!acceptedLegal)}
+              >
+                {acceptedLegal ? (
+                  <CheckSquare size={24} color={Colors.light.primary} />
+                ) : (
+                  <Square size={24} color={Colors.light.textSecondary} />
+                )}
+              </TouchableOpacity>
+              <View style={{ flex: 1, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Text style={styles.legalText}>
+                  {t('signup.iAgreeTo')}{' '}
+                </Text>
+                <TouchableOpacity onPress={() => router.push('/docs/TermsAndConditions')}>
+                  <Text style={styles.legalLink}>{t('signup.terms')}</Text>
+                </TouchableOpacity>
+                <Text style={styles.legalText}>
+                  {' & '}
+                </Text>
+                <TouchableOpacity onPress={() => router.push('/docs/PrivacyPolicy')}>
+                  <Text style={styles.legalLink}>{t('signup.privacyPolicy')}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {errors.acceptedLegal && (
+              <Text style={styles.errorText}>{errors.acceptedLegal}</Text>
+            )}
 
             <TouchableOpacity
               style={styles.button}
@@ -634,5 +671,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.light.primary,
     fontWeight: '700' as const,
+  },
+  legalContainer: {
+    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  checkbox: {
+    marginRight: I18nManager.isRTL ? 0 : 10,
+    marginLeft: I18nManager.isRTL ? 10 : 0,
+  },
+  legalText: {
+    fontSize: 14,
+    color: Colors.light.textSecondary,
+    flexShrink: 1, // Re-added flexShrink
+  },
+  legalLink: {
+    fontSize: 14,
+    color: Colors.light.primary,
+    fontWeight: '700' as const,
+    textDecorationLine: 'underline',
   },
 });

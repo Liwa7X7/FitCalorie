@@ -32,7 +32,7 @@ function RootLayoutNav() {
   useEffect(() => {
     if (!isNavigationReady) return;
 
-    const inAuthGroup = segments[0] === 'login' || segments[0] === 'sign-up';
+    const inAuthGroup = segments[0] === 'login' || segments[0] === 'sign-up' || segments[0] === 'docs';
 
     if (!isAuthenticated && !inAuthGroup) {
       router.replace('/login');
@@ -56,6 +56,8 @@ function RootLayoutNav() {
       <Stack.Screen name="login" options={{ headerShown: false, animation: "fade" }} />
       <Stack.Screen name="sign-up" options={{ headerShown: false, animation: "slide_from_right" }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "fade" }} />
+      <Stack.Screen name="docs/PrivacyPolicy" options={{ headerShown: true, animation: "slide_from_right" }} />
+      <Stack.Screen name="docs/TermsAndConditions" options={{ headerShown: true, animation: "slide_from_right" }} />
     </Stack>
   );
 }

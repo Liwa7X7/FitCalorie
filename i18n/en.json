@@ -33,7 +33,10 @@
     "active": "Active",
     "veryActive": "Very Active",
     "back": "Back",
-    "complete": "Complete"
+    "complete": "Complete",
+    "iAgreeTo": "I agree to the",
+    "terms": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy"
   },
   "home": {
     "greeting": "Hello",
@@ -87,7 +90,8 @@
     "loginFailedTitle": "Login Failed",
     "invalidEmail": "Invalid email address.",
     "userNotFound": "No account found for this email.",
-    "incorrectPassword": "Incorrect password."
+    "incorrectPassword": "Incorrect password.",
+    "legalRequired": "You must accept the Terms and Conditions and Privacy Policy to continue."
   },
   "profile": {
     "title": "Profile",
