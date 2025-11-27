@@ -51,7 +51,7 @@ export default function SuggestionsScreen() {
         friction: 7,
       }),
     ]).start();
-  }, []);
+  }, [buttonsAnim, headerAnim, statsAnim]);
 
   const todayCalories = getTodayCalories();
   const todayMacros = getTodayMacros();

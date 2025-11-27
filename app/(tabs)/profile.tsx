@@ -52,7 +52,7 @@ export default function ProfileScreen() {
         friction: 7,
       }),
     ]).start();
-  }, []);
+  }, [headerAnim, profileAnim, statsAnim]);
 
   useEffect(() => {
     if (editModalVisible) {
@@ -65,7 +65,7 @@ export default function ProfileScreen() {
     } else {
       modalAnim.setValue(0);
     }
-  }, [editModalVisible]);
+  }, [editModalVisible, modalAnim]);
 
   const todayCalories = getTodayCalories();
   const targetCalories = calculateBMR();

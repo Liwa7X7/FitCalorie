@@ -1,12 +1,13 @@
 import React from 'react';
-import { ScrollView, Text, StyleSheet, View } from 'react-native';
+import { ScrollView, Text, StyleSheet, View, I18nManager } from 'react-native';
 import { Stack } from 'expo-router';
+import Colors from '@/constants/colors';
 
 const TermsAndConditions = () => {
   return (
     <View style={styles.fullScreenContainer}>
       <Stack.Screen options={{ headerTitle: "Terms and Conditions" }} />
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.lastUpdated}>Last Updated: November 7, 2025</Text>
 
         <Text style={styles.paragraph}>
@@ -115,33 +116,41 @@ const TermsAndConditions = () => {
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
-    backgroundColor: '#fff', // Or a suitable background color
+    backgroundColor: Colors.light.background,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
+    backgroundColor: Colors.light.background,
   },
   lastUpdated: {
     fontSize: 12,
-    color: '#666',
+    color: Colors.light.textSecondary,
     marginBottom: 20,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   heading: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
+    color: Colors.light.text,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   paragraph: {
     fontSize: 14,
     marginBottom: 10,
     lineHeight: 20,
+    color: Colors.light.text,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   listItem: {
     fontSize: 14,
-    marginLeft: 10,
+    marginStart: 10, // Use start for RTL compatibility
     marginBottom: 5,
     lineHeight: 20,
+    color: Colors.light.text,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
 });
 

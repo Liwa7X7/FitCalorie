@@ -5,8 +5,6 @@ import Colors from '@/constants/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { generateText } from '@rork/toolkit-sdk';
-
 export default function HistoryScreen() {
   const { foods, removeFood, getTodayCalories, getTodayMacros } = useFood();
   const insets = useSafeAreaInsets();
@@ -32,7 +30,7 @@ export default function HistoryScreen() {
         friction: 7,
       }),
     ]).start();
-  }, []);
+  }, [headerAnim, summaryAnim]);
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
